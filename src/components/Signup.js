@@ -1,13 +1,23 @@
 import React, { useState } from "react";
-import logo from './logo.png'
+import logo from "./logo.png";
+import Modal from "./Modal";
 
 function Signup(props) {
+  const BUTTON_WRAPPER_STYLES = {
+    position: "relative",
+    zIndex: 1,
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fName, setFName] = useState("");
   const [lName, setLName] = useState("");
 
   const [strength, setStrength] = useState(0);
+
+  const [checked, setChecked] = React.useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,13 +57,14 @@ function Signup(props) {
     }
   };
 
+  const handleChange = () => {
+    setChecked(!checked);
+  };
+
   return (
     <div className="auth-form-container">
-          <div className="logo">
-        <img
-          src={logo}
-          alt="logo"
-        />
+      <div className="logo">
+        <img src={logo} alt="logo" />
         <h1>Markata</h1>
       </div>
       <h2>Signup</h2>
@@ -102,6 +113,21 @@ function Signup(props) {
             backgroundColor: getPasswordColor(),
           }}
         ></div>
+        <div>
+          <input type="checkbox" checked={checked} onChange={handleChange} />{" "}
+          Agree the terms and conditions.{" "}
+          <span className="link-btn" onClick={() => setIsOpen(true)}>
+            Read Here
+          </span>
+          <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+            Fancy Modal
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
+            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
+          </Modal>
+        </div>
         <button type="submit">Signup</button>
       </form>
       <p>

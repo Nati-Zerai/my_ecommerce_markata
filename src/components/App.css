@@ -112,3 +112,9 @@ input:valid {
   font-size: 12px;
   margin-top: 5px;
 } */
+input:required {
+  border: none;
+}
+.error {
+  border-color: red;
+}

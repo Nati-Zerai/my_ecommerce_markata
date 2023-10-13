@@ -1,15 +1,46 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import logo from "./logo.png";
+import api from "../api/link";
 
-function Login(props) {
+function LoginScreen(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isSubmitted, setSubmitted] = useState(false);
+  const [isEmpty, setEmpty] = useState(false);
+
+  const [date, setDate] = useState("");
+  const [truthy, setTruthy] = useState();
+  const [msg, setMsg] = useState("");
+
   const [errorEmail, setErrorEmail] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitted(true);
+    if (!email) {
+      setEmpty(true);
+    }
     console.log(email);
+
+    const post = {
+      emailId: email,
+      password: password,
+    };
+    try {
+      const response = await api.post("/login", post);
+      setTruthy(false);
+      console.log("-- " + JSON.stringify(response) + " --");
+      //TODO: After successful signup user goes to home page
+    } catch (err) {
+      setTruthy(true);
+      console.log("truthy " + truthy);
+      // setMsg(err.response.data);
+      setMsg("Error happened");
+      console.log("msg " + msg);
+      console.log(`Error: ${err.response.data}`);
+    }
   };
 
   return (
@@ -29,6 +60,8 @@ function Login(props) {
           placeholder="Enter email"
           id="email"
           name="email"
+          required
+          className={isEmpty && isSubmitted ? "error" : ""}
         />
         <label htmlFor="password">Password</label>
         <input
@@ -39,6 +72,8 @@ function Login(props) {
           placeholder="Enter password"
           id="password"
           name="password"
+          required
+          className={isEmpty && isSubmitted ? "error" : ""}
         />
         <button type="submit">Login</button>
       </form>
@@ -47,9 +82,10 @@ function Login(props) {
         <span className="link-btn" onClick={() => props.onFormSwitch("signup")}>
           Signup here
         </span>
-      </p>
+      </p>{" "}
+      <Link to="/cart"> Cart </Link>
     </div>
   );
 }
 
-export default Login;
+export default LoginScreen;

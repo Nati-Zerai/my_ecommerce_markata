@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import logo from "./logo.png";
 import Modal from "./Modal";
+import api from "../api/link";
 
-function Signup(props) {
-  const BUTTON_WRAPPER_STYLES = {
-    position: "relative",
-    zIndex: 1,
-  };
+function SignupScreen(props) {
+  // const BUTTON_WRAPPER_STYLES = {
+  //   position: "relative",
+  //   zIndex: 1,
+  // };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,14 +16,70 @@ function Signup(props) {
 
   const [strength, setStrength] = useState(0);
 
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSubmit = (e) => {
+  const [isSubmitted, setSubmitted] = useState(false);
+  const [isEmpty, setEmpty] = useState(false);
+
+  const [date, setDate] = useState("");
+  const [truthy, setTruthy] = useState();
+  const [msg, setMsg] = useState("");
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitted(true);
+    if (!email) {
+      setEmpty(true);
+    }
+    console.log(fName);
+    console.log(lName);
+    console.log(password);
     console.log(email);
+    console.log(date);
+    let year = date.split(/-/)[0];
+    let month = date.split(/-/)[1];
+    let date_num = date.split(/-/)[2];
+    console.log(date_num);
+    console.log(year);
+    console.log(month);
+    const post = {
+      firstName: fName,
+      lastName: lName,
+      emailId: email,
+      password: password,
+      month: month,
+      date: date_num,
+      year: year,
+    };
+    try {
+      const response = await api.post("/api/data", post);
+      setTruthy(false);
+      console.log("-- " + JSON.stringify(response) + " --");
+      //TODO: After successful signup user goes to login page
+      props.onFormSwitch("login")
+    } catch (err) {
+      // errorUserExist(err.response.data);
+      setTruthy(true);
+      console.log("truthy " + truthy);
+      // setMsg(err.response.data);
+      setMsg("Error happened");
+      console.log("msg " + msg);
+      console.log(`Error: ${err.response.data}`);
+    }
   };
+
+  // function errorUserExist(msg) {
+  //   msg = msg.split(/./)[0];
+  //   console.log("inside error" + msg);
+  //   const truthy = true;
+  // }
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log(email);
+  // };
 
   const calculateStrength = (password) => {
     const lengthScore = Math.min(password.length / 8, 1); // Normalize the length score
@@ -77,6 +134,8 @@ function Signup(props) {
             onChange={(e) => setFName(e.target.value)}
             id="fName"
             placeholder="Enter first name"
+            required
+            className={isEmpty && isSubmitted ? "error" : ""}
           />
           <input
             value={lName}
@@ -84,6 +143,8 @@ function Signup(props) {
             onChange={(e) => setLName(e.target.value)}
             id="lName"
             placeholder="Enter last name"
+            required
+            className={isEmpty && isSubmitted ? "error" : ""}
           />
         </div>
 
@@ -95,6 +156,8 @@ function Signup(props) {
           placeholder="Enter email"
           id="email"
           name="email"
+          required
+          className={isEmpty && isSubmitted ? "error" : ""}
         />
         <label htmlFor="password">Password</label>
         <input
@@ -104,6 +167,9 @@ function Signup(props) {
           placeholder="Enter password"
           id="password"
           name="password"
+          data-testid="password"
+          required
+          className={isEmpty && isSubmitted ? "error" : ""}
         />
         <div
           className="password-strength-bar"
@@ -113,6 +179,20 @@ function Signup(props) {
             backgroundColor: getPasswordColor(),
           }}
         ></div>
+        <label htmlFor="date">Date of Birth</label>
+        <input
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          type="date"
+          id="date"
+          name="date"
+          data-testid="date"
+          required
+          className={isEmpty && isSubmitted ? "error" : ""}
+        />
+
+        {truthy ? <p style={{ color: "red" }}>{`${msg}`}</p> : <p></p>}
+
         <div>
           <input type="checkbox" checked={checked} onChange={handleChange} />{" "}
           Agree the terms and conditions.{" "}
@@ -120,12 +200,7 @@ function Signup(props) {
             Read Here
           </span>
           <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-            Fancy Modal
-            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
-            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
-            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
-            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
-            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available. 
+            hi there
           </Modal>
         </div>
         <button type="submit">Signup</button>
@@ -140,4 +215,4 @@ function Signup(props) {
   );
 }
 
-export default Signup;
+export default SignupScreen;

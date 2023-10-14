@@ -215,7 +215,7 @@ function SignupScreen(props) {
         {truthy ? <p style={{ color: "red" }}>{`${msg}`}</p> : <p></p>}
 
         <div>
-          <input type="checkbox" checked={checked} onChange={handleChange} />{" "}
+          <input type="checkbox" checked={checked} onChange={handleChange} required/>{" "}
           Agree the terms and conditions.{" "}
           <span className="link-btn" onClick={() => setIsOpen(true)}>
             Read Here

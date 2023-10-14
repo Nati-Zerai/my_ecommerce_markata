@@ -13,9 +13,10 @@ function UserActivateScreen() {
   const token = searchParams.get("token");
   //   setToken(receivedToken);
   console.log("Before   " + token);
+  http://localhost:3000/users/activate-account?token=2417676
   try {
     api
-      .post("/users/activate-account", {token:token})
+      .post("/users/activate-account", {url:"http://localhost:3000/users/activate-account?token="+token})
       .then((response) => {
         setTruthy(false);
         console.log("-- " + JSON.stringify(response) + " --");

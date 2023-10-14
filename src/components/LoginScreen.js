@@ -2,8 +2,17 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "./logo.png";
 import api from "../api/link";
+import { useNavigate } from "react-router-dom";
 
 function LoginScreen(props) {
+  //change path
+  const navigate = useNavigate();
+
+  const changePath = (path) => {
+    // navigate to path
+    navigate(path);
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -33,6 +42,10 @@ function LoginScreen(props) {
       setTruthy(false);
       console.log("-- " + JSON.stringify(response) + " --");
       //TODO: After successful signup user goes to home page
+      // Navigate to Home
+      if (response.status == 200) {
+        changePath("/");
+      }
     } catch (err) {
       setTruthy(true);
       console.log("truthy " + truthy);
@@ -75,15 +88,18 @@ function LoginScreen(props) {
           required
           className={isEmpty && isSubmitted ? "error" : ""}
         />
+        {truthy ? <p style={{ color: "red" }}>{`${msg}`}</p> : <p></p>}
+
         <button type="submit">Login</button>
       </form>
       <p>
         Don't have an account?{" "}
-        <span className="link-btn" onClick={() => props.onFormSwitch("signup")}>
+        <span className="link-btn" onClick={() => changePath("/signup")}>
           Signup here
+          {/* <Link to="/signup"> Signup here </Link> */}
         </span>
       </p>{" "}
-      <Link to="/cart"> Cart </Link>
+      {/* <Link to="/cart"> Cart </Link> */}
     </div>
   );
 }

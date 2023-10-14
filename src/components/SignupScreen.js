@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "./logo.png";
 import Modal from "./Modal";
-import api from "../api/link";
+import api, { baseAPI } from "../api/link";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 function SignupScreen(props) {
-  // const BUTTON_WRAPPER_STYLES = {
-  //   position: "relative",
-  //   zIndex: 1,
-  // };
+  const navigate = useNavigate();
+  const changePath = (path) => {
+    // navigate to path
+    navigate(path);
+  };
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,11 +58,13 @@ function SignupScreen(props) {
       year: year,
     };
     try {
-      const response = await api.post("/api/data", post);
+      const response = await api.post("/signup", post);
       setTruthy(false);
       console.log("-- " + JSON.stringify(response) + " --");
       //TODO: After successful signup user goes to login page
-      props.onFormSwitch("login")
+      if (response.status == 200) {
+        changePath("/login");
+      }
     } catch (err) {
       // errorUserExist(err.response.data);
       setTruthy(true);
@@ -117,6 +123,21 @@ function SignupScreen(props) {
   const handleChange = () => {
     setChecked(!checked);
   };
+  // Terms and conditions
+  const [terms, setTerms] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      const apiUrl = baseAPI + "/terms";
+      try {
+        const response = await axios.get(apiUrl);
+        setTerms(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    // Call the async function
+    fetchData();
+  }, []); 
 
   return (
     <div className="auth-form-container">
@@ -200,15 +221,16 @@ function SignupScreen(props) {
             Read Here
           </span>
           <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-            hi there
+            {terms}
           </Modal>
         </div>
         <button type="submit">Signup</button>
       </form>
       <p>
         Already have an account?{" "}
-        <span className="link-btn" onClick={() => props.onFormSwitch("login")}>
+        <span className="link-btn" onClick={() => changePath("/login")}>
           Login here
+          {/* <Link to="/login"> Login here </Link> */}
         </span>
       </p>
     </div>
